@@ -45,7 +45,7 @@ def TPoseRecorder(time):
         try:
             while True:
                 camera.wait_recording(1)
-                if detect_motion(camera):
+                if TPoseDetector(camera):
                     print('Motion detected!')
                     # As soon as we detect motion, split the recording to
                     # record the frames "after" motion
