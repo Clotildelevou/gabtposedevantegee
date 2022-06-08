@@ -34,7 +34,7 @@ def TPoseDetector(camera):
         # Once motion detection is done, make the prior image the current
         prior_image = current_image
         prior_buffer = prior_image.load()
-        return return changedPixels > sensitivity
+        return changedPixels > sensitivity
 
 def TPoseRecorder(time):
     with picamera.PiCamera() as camera:
