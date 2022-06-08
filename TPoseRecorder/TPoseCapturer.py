@@ -1,16 +1,16 @@
 import io
 import random
 import picamera
+import TPoseSettings as set
 from PIL import Image
 
 prior_image = None
 prior_buffer = None
 changedPixels = 0
 filename = "capture-%04d%02d%02d-%02d%02d%02d.h264" % (time.year, time.month, time.day, time.hour, time.minute, time.second)
-threshold = 10
-sensitivity = 20
-width = 1280
-height = 720
+
+threshold, sensitivity = set.TPoseMotion()
+width, height = set.TPoseSize()
 
 def TPoseDetector(camera):
     global prior_image
