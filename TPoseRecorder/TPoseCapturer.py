@@ -26,10 +26,10 @@ def TPoseDetector(camera):
         current_image = Image.open(stream)
         current_buffer = current_image.load()
 
-        for x in xrange(0, width):
-            for y in xrange(0, height):
+        for x in range(0, width):
+            for y in range(0, height):
                 # Just check green channel as it's the highest quality channel
-                pixdiff = abs(buffer1[x,y][1] - buffer2[x,y][1])
+                pixdiff = abs(current_buffer[x,y][1] - prior_buffer[x,y][1])
                 if pixdiff > threshold:
                     changedPixels += 1
         # Once motion detection is done, make the prior image the current
