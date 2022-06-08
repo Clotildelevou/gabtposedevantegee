@@ -7,18 +7,21 @@ from PIL import Image
 
 prior_image = None
 prior_buffer = None
-changedPixels = 0
-filename = strftime("capture-%H:%S_%d_%m_%Y", gmtime())
+
+filename = strftime("capture-%Hh%S_%d_%m_%Y", gmtime())
 
 threshold, sensitivity = set.TPoseMotion()
 width, height = set.TPoseSize()
 
 def TPoseDetector(camera):
     global prior_image
+    global prior_buffer
+
+    changedPixels = 0
     stream = io.BytesIO()
     camera.capture(stream, format='jpeg', use_video_port=True)
     stream.seek(0)
-    if prior_image is None:
+    if prior_image is None or prior_buffer is None:
         prior_image = Image.open(stream)
         prior_buffer = prior_image.load()
         return False
@@ -38,6 +41,7 @@ def TPoseDetector(camera):
         return changedPixels > sensitivity
 
 def TPoseRecorder(time):
+    count = 1
     with picamera.PiCamera() as camera:
         camera.resolution = (width, height)
         stream = picamera.PiCameraCircularIO(camera, seconds=time)
@@ -49,11 +53,15 @@ def TPoseRecorder(time):
                     print('Motion detected!')
                     # As soon as we detect motion, split the recording to
                     # record the frames "after" motion
-                    camera.split_recording(filename + '.h264')
+                    count += 1
+                    camera.split_recording(filename + '_' + str(count) + '.h264')
+                    count -= 1
+                    stream.copy_to(filename + '_' +str(count) + '.h264', seconds=5)
+                    count += 1
                     stream.clear()
                     # Wait until motion is no longer detected, then split
                     # recording back to the in-memory circular buffer
-                    while detect_motion(camera):
+                    while TPoseDetector(camera):
                         camera.wait_recording(1)
                     print('Motion stopped!')
                     camera.split_recording(stream)
