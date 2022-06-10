@@ -21,7 +21,7 @@ public class Video {
         try {
             this.duration = formatDuration(json.getString("duration"));
             this.date = formatDate(json.getString("date"));
-            this.id = Integer.getInteger(json.getString("id"));
+            this.id = Integer.parseInt(json.getString("id"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -1,32 +1,31 @@
 package com.example.tposeselector;
 
+import android.util.Log;
 import android.widget.ListView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class VideosManager {
 
-    private static final String API_URL = "192.168.1.40";
+    private static final String API_URL = "http://192.168.1.17:5000";
 
     private final ArrayList<Video> videos = new ArrayList<>();
     private final VideoArrayAdapter adapter;
-
-    private final CloseableHttpClient httpClient = HttpClients.createDefault();
+    private final MainActivity mainActivity;
 
     // List update rate in seconds
     private int rate;
 
     VideosManager(MainActivity main) {
+        mainActivity = main;
         adapter = new VideoArrayAdapter(main,
                 R.layout.video_item,
                 videos);
@@ -41,20 +40,30 @@ public class VideosManager {
 
     private void getVideos() {
 
-        HttpGet request = new HttpGet(API_URL + "/videos");
+        try {
+            URL obj = new URL(API_URL + "/videos");
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            if(con.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                Log.e("GetVideos", "Problem with TPoseManager API");
+                return;
+            }
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null)
+                response.append(inputLine);
+            in.close();
 
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-
-            HttpEntity entity = response.getEntity();
-            String result = EntityUtils.toString(entity);
-            JSONArray jsonArray = new JSONArray(result);
-            for (int i = 0; i < jsonArray.length(); i++)
-                addVideos(new Video(jsonArray.getJSONObject(i)));
+            mainActivity.runOnUiThread(() -> {
+                try {
+                    JSONArray jsonArray = new JSONArray(response.toString());
+                    addVideos(jsonArray);
+                } catch (JSONException e) { e.printStackTrace(); }
+            });
         }
-        catch(IOException | JSONException e) {
-            e.printStackTrace();
-        }
-
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     private void worker() {
@@ -69,14 +78,17 @@ public class VideosManager {
         }
     }
 
-    public void addVideos(Video toAdd) {
-        ArrayList<Video> l = new ArrayList<>();
-        l.add(toAdd);
-        addVideos(l);
-    }
+    public void addVideos(JSONArray jsonArray) throws JSONException {
 
-    public void addVideos(ArrayList<Video> toAdd) {
-        videos.addAll(toAdd);
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+            Video v = new Video(jsonArray.getJSONObject(i));
+            if (videos.stream().anyMatch(vid -> vid.id == v.id))
+                continue;
+
+            videos.add(v);
+        }
+
         adapter.notifyDataSetChanged();
     }
 }
