@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 import os
 import ffmpeg
 
@@ -21,6 +21,10 @@ def videos():
             'id': "0"
         })
     return jsonify(res)
+
+@app.route('/video/<id>')
+def send_video(id):
+    return send_from_directory(VIDEOS_DIR, id + ".h264")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
