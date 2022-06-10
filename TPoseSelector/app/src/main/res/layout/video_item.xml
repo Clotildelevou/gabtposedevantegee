@@ -1,0 +1,61 @@
+<!--?xml version="1.0" encoding="utf-8"?-->
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtAlertText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="0dp"
+            tools:layout_editor_absoluteX="411dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_conversion_absoluteHeight="0dp"
+            tools:layout_conversion_absoluteWidth="0dp"
+            tools:layout_editor_absoluteX="470dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <TextView
+            android:id="@+id/txtAlertDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="411dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Switch
+            android:id="@+id/delete_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            tools:layout_conversion_absoluteHeight="101dp"
+            tools:layout_conversion_absoluteWidth="27dp"
+            tools:layout_editor_absoluteX="443dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Switch
+            android:id="@+id/upload_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload"
+            tools:layout_conversion_absoluteHeight="101dp"
+            tools:layout_conversion_absoluteWidth="32dp"
+            tools:layout_editor_absoluteX="411dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
