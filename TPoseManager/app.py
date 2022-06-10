@@ -18,7 +18,7 @@ def videos():
         res.append({
             'duration':  metadata["duration"],
             'date': os.path.getmtime(path),
-            'id': "0"
+            'id': name[:name.index('.')]
         })
     return jsonify(res)
 
