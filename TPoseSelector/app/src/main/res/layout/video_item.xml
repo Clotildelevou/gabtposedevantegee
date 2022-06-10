@@ -1,61 +1,59 @@
 <!--?xml version="1.0" encoding="utf-8"?-->
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <TextView
+        android:id="@+id/date"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:text="00/00/00 00:00"
+        android:textSize="20dp" />
 
-        <TextView
-            android:id="@+id/txtAlertText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_conversion_absoluteHeight="19dp"
-            tools:layout_conversion_absoluteWidth="0dp"
-            tools:layout_editor_absoluteX="411dp"
-            tools:layout_editor_absoluteY="0dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="24dp"
+        android:layout_height="wrap_content">
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_conversion_absoluteHeight="0dp"
-            tools:layout_conversion_absoluteWidth="0dp"
-            tools:layout_editor_absoluteX="470dp"
-            tools:layout_editor_absoluteY="0dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/txtAlertDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_conversion_absoluteHeight="19dp"
-            tools:layout_conversion_absoluteWidth="411dp"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00min 00s"
+        android:textSize="20dp" />
 
-        <Switch
-            android:id="@+id/delete_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            tools:layout_conversion_absoluteHeight="101dp"
-            tools:layout_conversion_absoluteWidth="27dp"
-            tools:layout_editor_absoluteX="443dp"
-            tools:layout_editor_absoluteY="0dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="24dp"
+        android:layout_height="wrap_content">
 
-        <Switch
-            android:id="@+id/upload_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upload"
-            tools:layout_conversion_absoluteHeight="101dp"
-            tools:layout_conversion_absoluteWidth="32dp"
-            tools:layout_editor_absoluteX="411dp"
-            tools:layout_editor_absoluteY="0dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+    <Switch
+        android:id="@+id/delete_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/DeleteSwitch"
+        android:trackTint="#AA0000"
+        tools:layout_conversion_absoluteHeight="101dp"
+        tools:layout_conversion_absoluteWidth="27dp"
+        tools:layout_editor_absoluteX="443dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <Switch
+        android:id="@+id/upload_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/UploadSwitch"
+        android:trackTint="#00AA00"
+        tools:layout_conversion_absoluteHeight="101dp"
+        tools:layout_conversion_absoluteWidth="32dp"
+        tools:layout_editor_absoluteX="411dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 </LinearLayout>

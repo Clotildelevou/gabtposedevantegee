@@ -1,0 +1,19 @@
+<resources>
+
+    <style name="Widget.Theme.TPoseSelector.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.Theme.TPoseSelector.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+    <style name="DeleteSwitch">
+        <item name="colorControlActivated">#FF0000</item>
+    </style>
+
+    <style name="UploadSwitch">
+        <item name="colorControlActivated">#00FF00</item>
+    </style>
+</resources>

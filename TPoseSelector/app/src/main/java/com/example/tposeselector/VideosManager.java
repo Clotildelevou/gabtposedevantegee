@@ -15,14 +15,13 @@ import java.util.ArrayList;
 
 public class VideosManager {
 
-    private static final String API_URL = "http://192.168.1.17:5000";
+    private static final String API_URL = "http://raspberrypi:5000";
 
     private final ArrayList<Video> videos = new ArrayList<>();
     private final VideoArrayAdapter adapter;
     private final MainActivity mainActivity;
 
-    // List update rate in seconds
-    private int rate;
+    private int rate; // List update rate in seconds
 
     VideosManager(MainActivity main) {
         mainActivity = main;
