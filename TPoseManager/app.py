@@ -7,6 +7,7 @@ app = Flask("T-Pose Manager")
 
 VIDEOS_DIR = "/home/pi/gabtposedevantegee/tposes"
 SAVED_DIR = "/home/pi/gabtposedevantegee/savedtposes"
+SUFFIX = ".h264"
 
 
 @app.route("/videos", methods=['GET'])
@@ -28,21 +29,23 @@ def videos():
 
 @app.route('/video/<id>', methods=['GET'])
 def send_video(id):
-    return send_from_directory(VIDEOS_DIR, id + ".h264")
+    return send_from_directory(VIDEOS_DIR, id + SUFFIX)
 
 
-@app.route('/videos/save', methods=['POST'])
-def save_videos():
-    ids = json.loads(request.json)
-    for i in ids:
-        os.rename(os.path.join(VIDEOS_DIR, i), os.path.join(SAVED_DIR, i))
+@app.route('/videos/upload', methods=['POST'])
+def upload_videos():
+    for i in request.json:
+        name = str(i) + SUFFIX
+        os.rename(os.path.join(VIDEOS_DIR, name), os.path.join(SAVED_DIR, name))
+    return "ok"
 
 
 @app.route('/videos/delete', methods=['POST'])
 def delete_video():
-    ids = json.loads(request.json)
-    for i in ids:
-        os.remove(os.path.join(VIDEOS_DIR, i))
+    for i in request.json:
+        name = str(i) + SUFFIX
+        os.remove(os.path.join(VIDEOS_DIR, name))
+    return "ok"
 
 
 if __name__ == "__main__":
