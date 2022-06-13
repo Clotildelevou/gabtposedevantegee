@@ -19,7 +19,7 @@ public class VideoPlayer extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         VideoView videoView = findViewById(R.id.videoView);
-        videoView.setVideoPath(API_URL + "/video/" + getIntent().getIntExtra("id", 0));
+        videoView.setVideoPath(TPoseManager.video_url(getIntent().getIntExtra("id", 0)));
         videoView.start();
     }
 }

@@ -12,6 +12,9 @@ public class Video {
     public String duration;
     public int id;
 
+    public boolean upload = false;
+    public boolean delete = false;
+
     private String formatDate(String date) {
         Timestamp timestamp = new Timestamp((long) Float.parseFloat(date));
         return new SimpleDateFormat("dd/MM/yy HH:mm").format(timestamp);

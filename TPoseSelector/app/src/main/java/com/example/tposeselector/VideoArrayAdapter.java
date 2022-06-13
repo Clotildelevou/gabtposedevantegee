@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 
 import java.util.List;
 
@@ -44,19 +46,33 @@ public class VideoArrayAdapter extends ArrayAdapter<Video> {
             view = (LinearLayout) convertView;
         }
 
-        //Get the text boxes from the listitem.xml file
+        // Gets the components
         TextView date = view.findViewById(R.id.date);
         TextView duration = view.findViewById(R.id.duration);
-        LinearLayout linearLayout = view.findViewById(R.id.linearLayout);
+        Switch upload = view.findViewById(R.id.upload_switch);
+        Switch delete = view.findViewById(R.id.delete_switch);
+        LinearLayout linearLayout = view.findViewById(R.id.linearLayout); // Button
 
-        //Assign the appropriate data from our alert object above
+        // Assigns the data
         date.setText(video.date);
         duration.setText(video.duration);
 
+        // Assigns the listeners
         linearLayout.setOnClickListener((View v) -> {
+            // Plays the video
             Intent intent = new Intent(context, VideoPlayer.class);
             intent.putExtra("id", video.id);
             context.startActivity(intent);
+        });
+        upload.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            video.upload = isChecked;
+            if(isChecked && delete.isChecked())
+                delete.setChecked(false);
+        });
+        delete.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            video.delete = isChecked;
+            if(isChecked && upload.isChecked())
+                upload.setChecked(false);
         });
 
         return view;

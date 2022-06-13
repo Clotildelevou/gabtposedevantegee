@@ -1,21 +1,16 @@
 package com.example.tposeselector;
 
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class VideosManager {
-
-    private static final String API_URL = "http://raspberrypi:5000";
 
     private final ArrayList<Video> videos = new ArrayList<>();
     private final VideoArrayAdapter adapter;
@@ -23,13 +18,40 @@ public class VideosManager {
 
     private int rate; // List update rate in seconds
 
-    VideosManager(MainActivity main) {
+    public VideosManager(MainActivity main) {
+
         mainActivity = main;
+
         adapter = new VideoArrayAdapter(main,
                 R.layout.video_item,
                 videos);
-        ListView listView = main.findViewById(R.id.VideosList);
+        ListView listView = main.findViewById(R.id.videos_list);
         listView.setAdapter(adapter);
+
+        Button done = main.findViewById(R.id.done_button);
+        done.setOnClickListener((View view) -> new Thread(this::doneClicked).start());
+    }
+
+    private void doneClicked() {
+
+        ArrayList<Integer> upload = videos.stream()
+                .filter(v -> v.upload)
+                .map(v -> v.id)
+                .collect(Collectors.toCollection(ArrayList::new));
+        TPoseManager.upload_videos(upload);
+
+        ArrayList<Integer> delete = videos.stream()
+                .filter(v -> v.delete)
+                .map(v -> v.id)
+                .collect(Collectors.toCollection(ArrayList::new));
+        TPoseManager.delete_videos(delete);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        videos.clear();
     }
 
     public void start(int rate) {
@@ -37,37 +59,14 @@ public class VideosManager {
         new Thread(this::worker).start();
     }
 
-    private void getVideos() {
-
-        try {
-            URL obj = new URL(API_URL + "/videos");
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
-            if(con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.e("GetVideos", "Problem with TPoseManager API");
-                return;
-            }
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null)
-                response.append(inputLine);
-            in.close();
-
-            mainActivity.runOnUiThread(() -> {
-                try {
-                    JSONArray jsonArray = new JSONArray(response.toString());
-                    addVideos(jsonArray);
-                } catch (JSONException e) { e.printStackTrace(); }
-            });
-        }
-        catch (IOException e) { e.printStackTrace(); }
-    }
-
     private void worker() {
+
         while (true) {
-            getVideos();
+
+            JSONArray videos = TPoseManager.videos();
+            mainActivity.runOnUiThread(() -> {
+                addVideos(videos);
+            });
 
             try {
                 Thread.sleep(rate);
@@ -77,16 +76,16 @@ public class VideosManager {
         }
     }
 
-    public void addVideos(JSONArray jsonArray) throws JSONException {
+    private void addVideos(JSONArray jsonArray) {
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-
-            Video v = new Video(jsonArray.getJSONObject(i));
-            if (videos.stream().anyMatch(vid -> vid.id == v.id))
-                continue;
-
-            videos.add(v);
-        }
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Video v = new Video(jsonArray.getJSONObject(i));
+                if (videos.stream().anyMatch(vid -> vid.id == v.id))
+                    continue;
+                videos.add(v);
+            }
+        } catch(JSONException | NullPointerException e) { e.printStackTrace(); }
 
         adapter.notifyDataSetChanged();
     }
